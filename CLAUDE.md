@@ -28,7 +28,7 @@ homework/
 ├── data/
 │   ├── wlchild.csv
 │   └── wlchild2.csv
-├── 01_eda.py           # Phase 1: 探索的データ分析
+├── 01_correlation.py   # Phase 1: 相関分析
 ├── 02_simple_reg.py    # Phase 2: 単回帰分析
 ├── 03_interaction.py   # Phase 3: 交互作用・多項式回帰
 ├── 04_extended.py      # Phase 4: 追加変数（ude, tekubi）を使った分析

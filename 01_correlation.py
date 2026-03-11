@@ -4,12 +4,12 @@ import matplotlib.pyplot as plt
 
 # 列は['age', 'length', 'weight']
 def main():
-    df = pd.read_csv("data/wlchild.csv")
+    df = pd.read_csv("data/wlchild.csv").dropna()
 
     df["age"] = df["age"].astype(float)
-    print(df["age"].max())
+    # print(df["age"].max())
     df["weight"] = df["weight"].astype(float)
-    print(df.dtypes)
+    # print(df.dtypes)
 
     # 相関係数を計算
     corr = df.corr()
@@ -17,6 +17,7 @@ def main():
     cols = df.columns
 
     n = len(cols)
+    print(f"総件数: {len(df)}")
     _, axes = plt.subplots(n, n, figsize=(10, 9))
 
     for i, col_y in enumerate(cols):
@@ -39,9 +40,9 @@ def main():
             else:
                 ax.set_yticklabels([])
 
-    print(corr.round(3).to_string())
+    # print(corr.round(3).to_string())
     plt.tight_layout()
-    plt.savefig("output/correlation.png")
+    plt.savefig("output/01_correlation.png")
 
 
 if __name__ == "__main__":
