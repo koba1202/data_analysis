@@ -52,6 +52,15 @@ def main():
         ["切片", "age", "length", "ude", "tekubi"],
     )
 
+    # --- モデル3: age + length + ude + tekubi -> weight ---
+    X3 = sm.add_constant(df[["length", "tekubi"]].values)
+    model3 = sm.OLS(y, X3).fit()
+    print_model_summary(
+        model3,
+        "モデル2: length + tekubi -> weight",
+        ["切片", "length", "tekubi"],
+    )
+
     # --- モデル比較 ---
     print(f"\n{'=' * 50}")
     print("【モデル比較】")
@@ -60,6 +69,8 @@ def main():
     rows = [
         ("age + length", model1),
         ("age + length + ude + tekubi", model2),
+        ("age + length + tekubi", model3),
+
     ]
     for name, m in rows:
         print(f"  {name:<40} {m.rsquared:>8.4f} {m.rsquared_adj:>8.4f} {m.aic:>10.1f}")

@@ -24,18 +24,18 @@ def main():
     print(f"  R2 = {model_simple.rsquared:.4f}")
 
     # --- 2. 多項式回帰: age + age^2 → weight ---
-    age2 = age**2
-    X_poly = sm.add_constant(np.column_stack([age, age2]))
+    length2 = length**2
+    X_poly = sm.add_constant(np.column_stack([length, length2]))
     model_poly = sm.OLS(y, X_poly).fit()
 
     print(f"\n{'=' * 50}")
-    print("【モデル2】多項式回帰: age + age^2 -> weight")
+    print("【モデル2】多項式回帰: length + length^2 -> weight")
     print(f"  R2         = {model_poly.rsquared:.4f}")
     print(f"  Adj. R2    = {model_poly.rsquared_adj:.4f}")
     print(f"  切片       = {model_poly.params[0]:.4f}")
-    print(f"  age の係数 = {model_poly.params[1]:.4f}")
-    print(f"  age^2 の係数 = {model_poly.params[2]:.4f}")
-    for i, name in enumerate(["切片", "age", "age^2"]):
+    print(f"  length の係数 = {model_poly.params[1]:.4f}")
+    print(f"  length^2 の係数 = {model_poly.params[2]:.4f}")
+    for i, name in enumerate(["切片", "length", "length^2"]):
         print(f"  {name}: p値 = {model_poly.pvalues[i]:.2e}")
 
     # --- 3. 交互作用モデル: age + length + age*length → weight ---
@@ -69,17 +69,19 @@ def main():
 
     # --- 可視化1: 単回帰 vs 多項式 ---
     fig, ax = plt.subplots(figsize=(8, 6))
-    ax.scatter(age, y, alpha=0.3, s=10, label="データ")
-    x_plot = np.linspace(age.min(), age.max(), 200)
+    ax.scatter(length, y, alpha=0.3, s=10, label="データ")
+    x_plot = np.linspace(length.min(), length.max(), 200)
 
     # 単回帰直線
-    y_simple = model_simple.params[0] + model_simple.params[1] * x_plot
+    X_simple = sm.add_constant(length)
+    model_simple_length = sm.OLS(y, X_simple).fit()
+    y_simple = model_simple_length.params[0] + model_simple_length.params[1] * x_plot
     ax.plot(
         x_plot,
         y_simple,
         color="orange",
         linewidth=2,
-        label=f"単回帰 (R\u00b2={model_simple.rsquared:.3f})",
+        label=f"単回帰 (R\u00b2={model_simple_length.rsquared:.3f})",
     )
 
     # 多項式曲線
@@ -96,8 +98,8 @@ def main():
         label=f"多項式 (R\u00b2={model_poly.rsquared:.3f})",
     )
 
-    ax.set_title("年齢 \u2192 体重: 単回帰 vs 多項式回帰")
-    ax.set_xlabel("age（年齢）")
+    ax.set_title("年齢 \u2192 身長: 単回帰 vs 多項式回帰")
+    ax.set_xlabel("length（身長）")
     ax.set_ylabel("weight（体重 kg）")
     ax.legend()
     plt.tight_layout()
