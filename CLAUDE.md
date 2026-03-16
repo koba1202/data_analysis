@@ -21,18 +21,25 @@
 ## ディレクトリ構成
 
 ```
-homework/
-├── CLAUDE.md
+data_analysis
 ├── venv/
 ├── requirements.txt
-├── data/
-│   ├── wlchild.csv
-│   └── wlchild2.csv
-├── 01_correlation.py   # Phase 1: 相関分析
-├── 02_simple_reg.py    # Phase 2: 単回帰分析
-├── 03_interaction.py   # Phase 3: 交互作用・多項式回帰
-├── 04_extended.py      # Phase 4: 追加変数（ude, tekubi）を使った分析
-└── outputs/            # グラフ・レポートの出力先
+├── CLAUDE.md
+├── fourth_homework/
+│   ├── data/
+│   │   └── wlchild.csv
+│   ├── 01_correlation.py   # Phase 1: 相関分析
+│   ├── 02_simple_reg.py    # Phase 2: 単回帰分析
+│   ├── 03_interaction.py   # Phase 3: 交互作用・多項式回帰
+│   ├── 04_extended.py      # Phase 4: 追加変数（ude, tekubi）を使った分析
+│   └── outputs/            # グラフ・レポートの出力先
+└── fifth_homework
+    ├── data/
+    │   └── wlchild.csv
+    ├── 01_correlation.py   # Phase 1: 相関分析            
+    ├── 02_simple_reg.py    # Phase 2: 単回帰分析          
+    ├── 03_interaction.py   # Phase 3: 交互作用・多項式回帰
+    └── outputs/            # グラフ・レポートの出力先
 ```
 
 ## 開発ルール
