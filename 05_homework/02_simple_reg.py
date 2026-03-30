@@ -13,9 +13,9 @@ from shared.utils import (
 )
 
 
-def plot_regression(df, x_col, y_col, model, title, filename):
+def plot_regression(df, x_col, y_col, model, title, filename, ax):
     """散布図＋回帰直線を描画して保存"""
-    fig, ax = plt.subplots(figsize=(8, 6))
+    # fig, ax = plt.subplots(figsize=(8, 6))
     ax.scatter(df[x_col], df[y_col], alpha=0.3, s=10, label="データ")
 
     x_range = np.linspace(df[x_col].min(), df[x_col].max(), 100)
@@ -26,7 +26,7 @@ def plot_regression(df, x_col, y_col, model, title, filename):
     ax.set_xlabel(x_col)
     ax.set_ylabel(y_col)
     ax.legend()
-    save_fig(filename)
+    # save_fig(filename)
 
 
 def main():
@@ -37,16 +37,23 @@ def main():
     x_vars = [
         ("age", "年齢 \u2192 体重"),
         ("length", "身長 \u2192 体重"),
-        ("ude", "上腕囲 \u2192 体重"),
-        ("tekubi", "手首囲 \u2192 体重"),
+        ("ude", "腕 \u2192 体重"),
+        ("tekubi", "手首 \u2192 体重"),
     ]
 
+    fig, axes = plt.subplots(2, 2, figsize=(12, 10))
+    axes = axes.flatten()
+
     models = []
-    for x_col, title in x_vars:
+    for i, (x_col, title) in enumerate(x_vars):
         model = run_ols(df, [x_col], "weight")
         print_model_summary(model, f"単回帰: {x_col} -> weight", ["切片", x_col])
-        plot_regression(df, x_col, "weight", model, title, f"02_{x_col}_weight.png")
+        plot_regression(df, x_col, "weight", model, title, f"02_{x_col}_weight.png", axes[i])
         models.append((f"{x_col} -> weight", model))
+
+    fig.suptitle("各説明変数と体重の単回帰", fontsize=16)
+    plt.tight_layout()
+    plt.savefig("output/02_all_regressions.png")
 
     # R2 比較表
     print_r2_comparison(models)

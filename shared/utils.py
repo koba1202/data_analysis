@@ -1,7 +1,6 @@
 """共通ユーティリティ: データ読み込み、OLS回帰、グラフ描画のヘルパー関数"""
 
 import os
-import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import statsmodels.api as sm
@@ -10,8 +9,8 @@ import statsmodels.api as sm
 def load_data(csv_path):
     """CSV読み込み + 欠損除去 + float変換"""
     df = pd.read_csv(csv_path).dropna()
-    for col in df.columns:
-        df[col] = df[col].astype(float)
+    # for col in df.columns:
+    #     df[col] = df[col].astype(float)
     print(f"データ件数: {len(df)}")
     return df
 
@@ -36,8 +35,8 @@ def run_ols(df, x_cols, y_col):
 def print_model_summary(model, name, var_names):
     """モデルの主要統計量をコンソールに表示"""
     print(f"\n{'=' * 50}")
-    print(model.summary())
     print(f"【{name}】")
+    print(model.summary())
     print(f"  R2      = {model.rsquared:.4f}")
     print(f"  Adj. R2 = {model.rsquared_adj:.4f}")
     print(f"  AIC     = {model.aic:.1f}")
