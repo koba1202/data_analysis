@@ -9,6 +9,15 @@ import statsmodels.api as sm
 def load_data(csv_path):
     """CSV読み込み + 欠損除去 + float変換"""
     df = pd.read_csv(csv_path).dropna()
+    for col in df.columns:
+        df[col] = df[col].astype(float)
+    print(f"データ件数: {len(df)}")
+    return df
+
+
+def load_data_undrop(csv_path):
+    """CSV読み込み"""
+    df = pd.read_csv(csv_path)
     # for col in df.columns:
     #     df[col] = df[col].astype(float)
     print(f"データ件数: {len(df)}")
