@@ -68,6 +68,13 @@ def train_model(
     if not actual_features:
         raise ValueError("有効な特徴量がありません")
 
+    # 特徴量が多すぎる場合はエラーにする（メモリ・CPU保護）
+    if len(actual_features) > 500:
+        raise ValueError(
+            f"特徴量が{len(actual_features)}列あります。"
+            "ワンホットエンコーディングではなくラベルエンコーディングを使用してください"
+        )
+
     # ターゲットとフィーチャーの分離
     X = work_df[actual_features].apply(pd.to_numeric, errors="coerce")
     y = work_df[target]
@@ -105,7 +112,7 @@ def train_model(
         raise ValueError(f"不正なモデル名: {model_name}")
 
     if model_name == "logistic_regression":
-        model = model_class(max_iter=1000, random_state=random_state)
+        model = model_class(max_iter=1000, solver="saga", random_state=random_state)
     elif model_name in ("knn",):
         model = model_class()
     elif model_name == "linear_regression":

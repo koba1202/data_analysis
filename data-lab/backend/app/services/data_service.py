@@ -40,7 +40,7 @@ def get_column_info(df: pd.DataFrame) -> list[dict[str, Any]]:
         dtype = infer_dtype(df[col])
         sample = df[col].dropna().head(5).tolist()
         # NaN を None に変換
-        sample = [None if isinstance(v, float) and np.isnan(v) else v for v in sample]
+        sample = [None if isinstance(v, float) and (np.isnan(v) or np.isinf(v)) else v for v in sample]
         columns.append({
             "name": col,
             "dtype": dtype,
@@ -54,8 +54,13 @@ def get_column_info(df: pd.DataFrame) -> list[dict[str, Any]]:
 def get_preview(df: pd.DataFrame, n: int = 10) -> list[dict[str, Any]]:
     """先頭n行のプレビューを返す"""
     preview_df = df.head(n)
-    # NaN を None に変換
-    return preview_df.where(preview_df.notna(), None).to_dict(orient="records")
+    # NaN を None に変換（JSON互換にする）
+    records = preview_df.to_dict(orient="records")
+    return [
+        {k: (None if isinstance(v, float) and (np.isnan(v) or np.isinf(v)) else v)
+         for k, v in row.items()}
+        for row in records
+    ]
 
 
 def compute_stats(df: pd.DataFrame) -> dict[str, Any]:
@@ -104,6 +109,6 @@ def compute_stats(df: pd.DataFrame) -> dict[str, Any]:
 
 def _safe_round(value, decimals: int = 4) -> float | None:
     """NaN安全な丸め処理"""
-    if value is None or (isinstance(value, float) and np.isnan(value)):
+    if value is None or (isinstance(value, float) and (np.isnan(value) or np.isinf(value))):
         return None
     return round(float(value), decimals)

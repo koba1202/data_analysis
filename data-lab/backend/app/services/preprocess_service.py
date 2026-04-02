@@ -48,6 +48,23 @@ def apply_label_encoding(df: pd.DataFrame, columns: list[str]) -> pd.DataFrame:
     return df
 
 
-def apply_onehot_encoding(df: pd.DataFrame, columns: list[str]) -> pd.DataFrame:
-    """ワンホットエンコーディングを適用する"""
-    return pd.get_dummies(df, columns=columns, drop_first=False, dtype=int)
+def apply_onehot_encoding(df: pd.DataFrame, columns: list[str], max_cardinality: int = 50) -> pd.DataFrame:
+    """ワンホットエンコーディングを適用する
+
+    ユニーク値が max_cardinality を超えるカラムはラベルエンコーディングにフォールバックする
+    """
+    safe_cols = []
+    fallback_cols = []
+    for col in columns:
+        if col in df.columns and df[col].nunique() <= max_cardinality:
+            safe_cols.append(col)
+        else:
+            fallback_cols.append(col)
+
+    if fallback_cols:
+        df = apply_label_encoding(df, fallback_cols)
+
+    if safe_cols:
+        df = pd.get_dummies(df, columns=safe_cols, drop_first=False, dtype=int)
+
+    return df
